@@ -1,5 +1,5 @@
 # BasicCalculator
-Basic calculator which can evaluate multiple operations and PEMDAS.
+Basic calculator which can evaluate multiple operations and PEMDAS.<br>
 ![Test one](https://cdn.discordapp.com/attachments/1126338503345709178/1149441149732405258/image.png)
 ![Test two](https://cdn.discordapp.com/attachments/1126338503345709178/1149439811954946178/image.png)
 

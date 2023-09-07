@@ -4,18 +4,30 @@
 #include "internal/evaluator/evaluator.hpp"
 #include "internal/shared/shared.hpp"
 
+using namespace calculator::internal;
+
 namespace calculator
 {
 	double calculator_t::calculate(const std::string& equation)
 	{
-		lexer_t lexer{};
-		std::vector<shared::token_t> tokens = lexer.tokenize(equation);
-
-		for (shared::token_t& token : tokens)
+		try
 		{
-			token.output();
+			lexer_t lexer{};
+			std::vector<shared::token_t> tokens = lexer.tokenize(equation);
+
+			parser_t parser{};
+			std::shared_ptr<shared::base_expr_t> main_stmt = parser.parse(tokens);
+
+			evaluator_t evaluator{};
+			double result = evaluator.eval(main_stmt);
+
+			return result;
+		}
+		catch (std::exception& except)
+		{
+			std::printf("Error: %s\n", except.what());
 		}
 
-		return 69.6942069;
+		return 0;
 	}
 }

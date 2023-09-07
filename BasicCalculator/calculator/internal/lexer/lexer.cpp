@@ -70,6 +70,12 @@ std::vector<shared::token_t> lexer_t::tokenize(const std::string& value)
 		case '^':
 			operation = shared::token_tt::POW;
 			break;
+		case '(':
+			operation = shared::token_tt::OPEN_PAREN;
+			break;
+		case ')':
+			operation = shared::token_tt::CLOSE_PAREN;
+			break;
 		}
 
 		if (operation != shared::token_tt::NONE)

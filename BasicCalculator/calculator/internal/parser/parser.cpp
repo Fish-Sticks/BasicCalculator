@@ -37,7 +37,6 @@ namespace calculator
 						break;
 					}
 					default:
-						token->output();
 						throw std::runtime_error("Received invalid token!");
 						break;
 				}
@@ -67,7 +66,7 @@ namespace calculator
 			}
 
 			if (rtn_expr.get() == nullptr)
-				rtn_expr = parse_primary();
+				rtn_expr = this->parse_primary();
 
 			return rtn_expr;
 		}
@@ -81,13 +80,13 @@ namespace calculator
 				if (next_token->value == token_tt::SUB)
 				{
 					this->eat_token();
-					std::shared_ptr<shared::base_expr_t> left_expr = parse_paren();
+					std::shared_ptr<shared::base_expr_t> left_expr = this->parse_paren();
 					rtn_expr = std::make_unique<shared::unary_expr_t>(std::move(left_expr));
 				}
 			}
 
 			if (rtn_expr.get() == nullptr)
-				rtn_expr = parse_paren();
+				rtn_expr = this->parse_paren();
 
 			return rtn_expr;
 		}
@@ -95,13 +94,13 @@ namespace calculator
 		std::shared_ptr<shared::base_expr_t> parser_t::parse_powmod()
 		{
 			std::shared_ptr<shared::base_expr_t> rtn_expr;
-			std::shared_ptr<shared::base_expr_t> left_expr = parse_unary();
+			std::shared_ptr<shared::base_expr_t> left_expr = this->parse_unary();
 
 			if (auto next_token = this->peak_token())
 			{
 				while (next_token)
 				{
-					if (next_token->value == token_tt::MOD || next_token->value == token_tt::POW)
+					if (next_token->value == token_tt::POW || next_token->value == token_tt::MOD)
 					{
 						shared::token_t current = *this->eat_token();
 						left_expr = std::make_unique<shared::binary_expr_t>(std::move(left_expr), this->parse_powmod(), current.value);
@@ -151,7 +150,7 @@ namespace calculator
 		std::shared_ptr<shared::base_expr_t> parser_t::parse_addsub()
 		{
 			std::shared_ptr<shared::base_expr_t> rtn_expr;
-			std::shared_ptr<shared::base_expr_t> left_expr = parse_muldiv();
+			std::shared_ptr<shared::base_expr_t> left_expr = this->parse_muldiv();
 
 			if (auto next_token = this->peak_token())
 			{

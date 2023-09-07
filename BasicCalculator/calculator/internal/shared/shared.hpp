@@ -27,40 +27,6 @@ namespace calculator
 				{
 					double number = 0;
 				};
-
-				void output() const
-				{
-					switch (this->value)
-					{
-					case token_tt::NONE:
-						std::printf("NONE\n");
-						break;
-					case token_tt::NUMBER:
-						std::printf("NUMBER: %.8f\n", number);
-						break;
-					case token_tt::ADD:
-						std::printf("ADD\n");
-						break;
-					case token_tt::SUB:
-						std::printf("SUBTRACT\n");
-						break;
-					case token_tt::MUL:
-						std::printf("MULTIPLY\n");
-						break;
-					case token_tt::DIV:
-						std::printf("DIVIDE\n");
-						break;
-					case token_tt::MOD:
-						std::printf("MODULO\n");
-						break;
-					case token_tt::POW:
-						std::printf("POWER\n");
-						break;
-					default:
-						std::printf("INVALID\n");
-						break;
-					}
-				}
 			};
 
 			// Parser structs
@@ -81,6 +47,11 @@ namespace calculator
 				{
 					return this->expr_type;
 				}
+
+				virtual std::string beautify()
+				{
+					return "NONE";
+				}
 			};
 
 			struct unary_expr_t : base_expr_t
@@ -89,6 +60,12 @@ namespace calculator
 				unary_expr_t(std::shared_ptr<base_expr_t> child) : base_expr_t{ expr_tt::UNARY }, child{ child } {}
 
 				std::shared_ptr<base_expr_t> child;
+
+
+				std::string beautify() override
+				{
+					return "(-" + this->child->beautify() + ")";
+				}
 			};
 
 			struct number_expr_t : base_expr_t
@@ -97,6 +74,11 @@ namespace calculator
 				number_expr_t(double number) : base_expr_t{ expr_tt::NUMBER }, value{ number } {}
 
 				double value = 0;
+
+				std::string beautify() override
+				{
+					return std::to_string(value);
+				}
 			};
 
 			struct binary_expr_t : base_expr_t
@@ -108,6 +90,34 @@ namespace calculator
 				token_tt operation = token_tt::NONE;
 				std::shared_ptr<base_expr_t> left{};
 				std::shared_ptr<base_expr_t> right{};
+
+				std::string beautify() override
+				{
+					char op = '&';
+					switch (operation)
+					{
+					case token_tt::ADD:
+						op = '+';
+						break;
+					case token_tt::SUB:
+						op = '-';
+						break;
+					case token_tt::MUL:
+						op = '*';
+						break;
+					case token_tt::DIV:
+						op = '/';
+						break;
+					case token_tt::MOD:
+						op = '%';
+						break;
+					case token_tt::POW:
+						op = '^';
+						break;
+					}
+
+					return "(" + this->left->beautify() + " " + op + " " + this->right->beautify() + ")";
+				}
 			};
 		}
 	}
